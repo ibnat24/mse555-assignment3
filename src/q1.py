@@ -202,26 +202,15 @@ Correct example for a 4-note sequence: [0, 1, 2]
 # ─────────────────────────────────────────────────────────────────────────────
 
 def call_llm(prompt: str) -> str:
-    """
-    Send the prompt to Claude claude-sonnet-4-6 and return the raw response text.
-
-    Temperature is fixed at 0.0 for deterministic, reproducible scores.
-    Raw text is returned without post-processing; parsing happens in
-    parse_vector_from_response().
-
-    Requires the environment variable ANTHROPIC_API_KEY to be set.
-    """
-    import anthropic
-
-    client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
-    resp = client.messages.create(
-        model="claude-sonnet-4-6",
-        max_tokens=512,
-        temperature=0.0,
+    from openai import OpenAI
+    
+    client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
+    resp = client.chat.completions.create(
+        model="gpt-4o",
         messages=[{"role": "user", "content": prompt}],
+        temperature=0.0,
     )
-    return resp.content[0].text.strip()
-
+    return resp.choices[0].message.content.strip()
 
 # ─────────────────────────────────────────────────────────────────────────────
 # PARSING & VALIDATION
